@@ -52,7 +52,7 @@ public class WxQzoneApplication {
 
                 System.out.println("\n\nFetching done!");
             } catch (InvalidCredentialException e) {
-                System.out.println("Illegal qq or skey provided.");
+                System.out.println("Illegal cookie file provided.");
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
