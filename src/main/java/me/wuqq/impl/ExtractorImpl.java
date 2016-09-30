@@ -36,7 +36,7 @@ public class ExtractorImpl implements Extractor {
                     .map(ExtractorImpl::toRecord)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            throw new RuntimeException("Bad format of msglist received from QZone Server");
+            throw new RuntimeException("Bad format of msglist received from QZone Server " + e);
         }
     }
 
