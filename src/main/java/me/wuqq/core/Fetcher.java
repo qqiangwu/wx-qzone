@@ -1,6 +1,6 @@
 package me.wuqq.core;
 
-import me.wuqq.domain.Credential;
+import me.wuqq.util.BadCredentialException;
 
 /**
  * Created by wuqq on 16-9-30.
@@ -9,9 +9,5 @@ import me.wuqq.domain.Credential;
  *
  */
 public interface Fetcher {
-    class InvalidCredentialException extends Exception {
-
-    }
-
-    void fetch(Credential credential) throws InvalidCredentialException;
+    void fetch(String credential) throws BadCredentialException;
 }

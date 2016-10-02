@@ -7,6 +7,4 @@ public interface Progressor {
     void init(long maxProgress);
 
     void advance(long advancedProgress);
-
-    void done();
 }

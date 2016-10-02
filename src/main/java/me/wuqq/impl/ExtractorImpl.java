@@ -1,5 +1,7 @@
 package me.wuqq.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.val;
 import me.wuqq.core.Extractor;
 import me.wuqq.domain.Comment;
@@ -7,10 +9,10 @@ import me.wuqq.domain.CommentOnComment;
 import me.wuqq.domain.Record;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by wuqq on 16-9-30.
@@ -18,21 +20,21 @@ import java.util.stream.Collectors;
 @Component
 public class ExtractorImpl implements Extractor {
     @Override
-    public String extractUsername(final Map<String, Object> rawData) {
-        return (String) rawData.get("name");
+    public String extractUsername(final JsonNode rawData) {
+        return rawData.path("name").asText();
     }
 
     @Override
-    public int extractRecordCount(final Map<String, Object> rawData) {
-        return ((Integer) rawData.get("total")).intValue();
+    public int extractRecordCount(final JsonNode rawData) {
+        return rawData.path("total").asInt();
     }
 
     @Override
-    public List<Record> extractRecords(final Map<String, Object> rawData) {
+    public List<Record> extractRecords(final JsonNode rawData) {
         try {
-            val msglist = (List<Map<String, Object>>) rawData.get("msglist");
+            val msglist = toStream(rawData.get("msglist"));
 
-            return msglist.stream()
+            return msglist
                     .map(ExtractorImpl::toRecord)
                     .collect(Collectors.toList());
         } catch (Exception e) {
@@ -40,33 +42,43 @@ public class ExtractorImpl implements Extractor {
         }
     }
 
-    private final static Record toRecord(final Map<String, Object> rawData) {
-        val content = (String) rawData.get("content");
-        val createTime = (String) rawData.get("createTime");
-        val rawComments = (List<Map<String, Object>>) rawData.getOrDefault("commentlist", Collections.emptyList());
-        val comments = rawComments.stream()
+    private static Stream<JsonNode> toStream(final JsonNode node) {
+        if (node instanceof ArrayNode) {
+            val array = (ArrayNode) node;
+
+            return StreamSupport.stream(array.spliterator(), false);
+        } else {
+            return Stream.empty();
+        }
+    }
+
+    private final static Record toRecord(final JsonNode rawData) {
+        val content = rawData.get("content").asText();
+        val createTime = rawData.get("createTime").asText();
+        val rawComments = toStream(rawData.get("commentlist"));
+        val comments = rawComments
                 .map(ExtractorImpl::toComment)
                 .collect(Collectors.toList());
 
         return new Record(createTime, content, comments);
     }
 
-    private final static Comment toComment(final Map<String, Object> rawData) {
-        val content = (String) rawData.get("content");
-        val createTime = (String) rawData.get("createTime");
-        val poster = (String) rawData.get("name");
-        val rawComments = (List<Map<String, Object>>) rawData.getOrDefault("list_3", Collections.emptyList());
-        val comments = rawComments.stream()
+    private final static Comment toComment(final JsonNode rawData) {
+        val content = rawData.get("content").asText();
+        val createTime = rawData.get("createTime").asText();
+        val poster = rawData.get("name").asText();
+        val rawComments = toStream(rawData.get("list_3"));
+        val comments = rawComments
                 .map(ExtractorImpl::toCommentOnComment)
                 .collect(Collectors.toList());
 
         return new Comment(createTime, content, poster, comments);
     }
 
-    private final static CommentOnComment toCommentOnComment(final Map<String, Object> rawData) {
-        val content = (String) rawData.get("content");
-        val createTime = (String) rawData.get("createTime");
-        val poster = (String) rawData.get("name");
+    private final static CommentOnComment toCommentOnComment(final JsonNode rawData) {
+        val content = rawData.get("content").asText();
+        val createTime = rawData.get("createTime").asText();
+        val poster = rawData.get("name").asText();
 
         return new CommentOnComment(createTime, content, poster);
     }

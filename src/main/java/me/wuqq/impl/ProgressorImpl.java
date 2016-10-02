@@ -15,9 +15,8 @@ public class ProgressorImpl implements Progressor {
 
     @Override
     public void init(final long maxProgress) {
-        System.out.println();
-        System.out.println("Start processing");
-
+        mCurrent = 0;
+        mCurrentTick = 0;
         mMax = maxProgress;
 
         this.initialRender();
@@ -28,18 +27,6 @@ public class ProgressorImpl implements Progressor {
         mCurrent += advancedProgress;
 
         this.tick();
-    }
-
-    @Override
-    public void done() {
-        this.tick();
-
-        if (mCurrentTick <= 50) {
-            System.out.print('*');
-        }
-
-        System.out.println();
-        System.out.println("Processing done");
     }
 
     private final void initialRender() {
@@ -54,6 +41,10 @@ public class ProgressorImpl implements Progressor {
         while (mCurrentTick < ticksNeeded) {
             System.out.print('*');
             ++mCurrentTick;
+        }
+
+        if (mCurrentTick == 50) {
+            System.out.print('*');
         }
     }
 }

@@ -8,7 +8,6 @@ import me.wuqq.domain.QZoneMeta;
 import me.wuqq.domain.Record;
 import okio.BufferedSink;
 import okio.Okio;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
@@ -23,8 +22,7 @@ import java.util.List;
 public class ArchiverImpl implements Archiver {
     BufferedSink mOutput;
     boolean mHasStarted = false;
-
-    @Autowired ObjectMapper mMapper;
+    ObjectMapper mMapper = new ObjectMapper();
 
     @PreDestroy
     @SneakyThrows
@@ -38,9 +36,9 @@ public class ArchiverImpl implements Archiver {
 
     @Override
     public void init(final QZoneMeta meta) {
-        val fileName = meta.getQq() + ".json";
-
         try {
+            val fileName = meta.getQq() + ".json";
+
             mOutput = Okio.buffer(Okio.sink(new File(fileName)));
             mOutput.writeUtf8("[");
         } catch (IOException e) {
