@@ -5,17 +5,17 @@
 就是想写代码了！
 
 # 使用方法
-由于在从QQ空间内下载所有说说, 因此需要登录. 但考虑到登录复杂度较高, 且不是这个项目的主要目的. 因以, 我使用了一种简洁的方法, 即, 直接在浏览器登录, 然后自己手动复制cookie, 并将其存储到一个文件中(比如cookie.txt).
+由于在从QQ空间内下载所有说说, 因此需要登录. 但考虑到登录复杂度较高, 且不是这个项目的主要目的. 因以, 我使用了一种简洁的方法, 即, 直接在浏览器登录, 然后自己手动复制cookie, 并作为命令行参数传入.
 
 ## 获取可执行文件
 可以直接在github的release中下载jar包, 也可以自己手动编译. 编译方法很简单, 下载项目, 运行`mvn package -Dmaven.test.skip=true`.
 
 ## 下载说说
-准备好了cookie文件及jar包后, 将其放在同一个目录下, 并在此目录下, 运行`java -jar wx-qzone.jar cookie.txt`.
+准备好了cookie及jar包后, 运行`java -jar wx-qzone.jar "p_uin=o0373490201; p_skey=GYatlPmdAIAz9uEvWPA8basA0JrkyCy7hn6jpbwc23U_"`.
 
 一段时间后, 会生成一个以你的QQ命名的json文件.
 
-## Cookie文件需要哪些项?
+## Cookie需要哪些项?
 QZone登录流程变动很快, 所以我实在懒得去写一个自动登录的程序, 维护成本太高. 直接复制Cookie简单易行. 目前看来, 有两个项是必须复制的, 即`p_uin`及`p_skey`.
 
 示例如下:

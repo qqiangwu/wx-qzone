@@ -1,4 +1,4 @@
-package me.wuqq.util;
+package me.wuqq.core;
 
 /**
  * Created by wuqq on 2016/10/2.

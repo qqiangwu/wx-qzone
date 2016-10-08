@@ -1,6 +1,6 @@
 package me.wuqq.core;
 
-import me.wuqq.util.BadCredentialException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Created by wuqq on 16-9-30.
@@ -9,5 +9,9 @@ import me.wuqq.util.BadCredentialException;
  *
  */
 public interface Fetcher {
-    void fetch(String credential) throws BadCredentialException;
+    JsonNode fetchMessagesFromOffset(int i) throws BadCredentialException;
+
+    String getTargetQQ();
+
+    int getPageSize();
 }
